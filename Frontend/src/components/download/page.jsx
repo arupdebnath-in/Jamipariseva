@@ -37,7 +37,7 @@ const DownloadCertificate = () => {
       setLoading(true);
 
       const payload = {
-        service_id: application.service_id,
+        service_id: "12",
         citizen_id: "2823",
         role_id: "6",
         request_id: application.request_id,
