@@ -37,6 +37,9 @@ function Login() {
       const userData = JSON.parse(storedUser);
 
       if (userData.password === loginPassword) {
+        // ✅ KEY CHANGE HERE: Save the active login email so CitizenDetails knows who to look up
+        localStorage.setItem("activeUserEmail", loginEmail);
+        
         navigate('/dashboard/services');
       } else {
         alert("Incorrect password. Please try again.");

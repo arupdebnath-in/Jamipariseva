@@ -5,7 +5,7 @@ const KhatianVerification = ({ setShowReveneuDetails, lgd_village_code , verifie
   const [isVerified, setIsVerified] = useState(false);
   const [searchByValue, setSearchByValue] = useState("");
   const [searchBy, setSearchBy] = useState("");
-  const [khataianNumber, setKhatianNumber] = useState("")
+  const [khatianNumber, setKhatianNumber] = useState(""); // Fixed typo in state setter name
 
   const searchByOptions = [
     {
@@ -71,14 +71,17 @@ const KhatianVerification = ({ setShowReveneuDetails, lgd_village_code , verifie
 
       if (responseData?.data?.verified) {
         setIsVerified(true);
+        setKhatianNumber(responseData?.data?.khatian_no || "1000"); 
         toast.success("Khatian Verified Successfully");
       } else {
         setIsVerified(false);
+        setKhatianNumber("");
         toast.error("Khatian is Not Verified");
       }
     } catch (error) {
       console.error("Api Error : ", error);
       setIsVerified(false);
+      setKhatianNumber("");
       toast.error("An error occurred during verification");
     }
   };
@@ -87,6 +90,7 @@ const KhatianVerification = ({ setShowReveneuDetails, lgd_village_code , verifie
     setSearchBy(e.target.value);
     setSearchByValue("");
     setIsVerified(false);
+    setKhatianNumber("");
   };
 
   const handleSearchByValue = (e) => {
@@ -97,11 +101,22 @@ const KhatianVerification = ({ setShowReveneuDetails, lgd_village_code , verifie
     if (!isVerified) {
       return toast.error("Khatian is Not Verified");
     }
+
+    const isDuplicate = verifiedKhatianList.some(
+      (item) => item.khatianNumber === khatianNumber
+    );
+
+    if (isDuplicate) {
+      return toast.error(`Khatian No. ${khatianNumber} is already added to the list.`);
+    }
+    // -------------------------
+
     const newKhatian = {
       id: crypto.randomUUID(),
-      khatianNumber:"1000",
-      payableAmount:"30"
-    }
+      khatianNumber: khatianNumber,
+      payableAmount: "30"
+    };
+
     setVerifiedKhatianList([...verifiedKhatianList, newKhatian]);
     setShowReveneuDetails(true);
   };
@@ -115,7 +130,7 @@ const KhatianVerification = ({ setShowReveneuDetails, lgd_village_code , verifie
       e.preventDefault();
       verifyHandler();
     }
-  }
+  };
 
   return (
     <div>
