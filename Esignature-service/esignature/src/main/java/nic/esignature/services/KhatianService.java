@@ -1,35 +1,32 @@
-package nic.khkatian_services.service;
+package nic.esignature.services;
+import nic.esignature.dto.KhatianResponse;
+import nic.esignature.entity.KhatianDocument;
+import nic.esignature.repository.KhatianDocumentRepository;
 import org.springframework.stereotype.Service;
-import nic.khkatian_services.entity.KhatianDocument;
-import nic.khkatian_services.repository.KhatianDocumentRepository;
-import nic.khkatian_services.dto.KhatianResponse;
 import java.util.Base64;
+
 @Service
 public class KhatianService {
     private final KhatianDocumentRepository repository;
 
-    public KhatianService(KhatianDocumentRepository repository) {
+    public KhatianService(
+            KhatianDocumentRepository repository) {
         this.repository = repository;
-    }
-
-    public KhatianDocument save(KhatianDocument document) {
-        return repository.save(document);
-    }
+}
     public KhatianResponse getKhatianDocument(
             String khatianNo,
             String villageCode,
-            String districtCode
-    ) {
+            String districtCode) {
 
         KhatianDocument document =
                 repository
                         .findByKhatianNoAndVillageCodeAndDistrictCode(
                                 khatianNo,
                                 villageCode,
-                                districtCode
-                        )
+                                districtCode)
                         .orElseThrow(() ->
-                                new RuntimeException("Document not found"));
+                                new RuntimeException(
+                                        "Document not found"));
 
         String base64 =
                 Base64.getEncoder()

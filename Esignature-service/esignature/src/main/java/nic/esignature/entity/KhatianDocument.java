@@ -1,4 +1,4 @@
-package nic.khkatian_services.entity;
+package nic.esignature.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -15,8 +15,6 @@ public class Document {
         @Column(name = "mime_type")
         private String mimeType;
 
-        @Column(name = "base64_content")
-        private String base64Content;
 
         @Column(name = "signature")
         private String signature;
@@ -54,13 +52,6 @@ public class Document {
             this.mimeType = mimeType;
         }
 
-        public String getBase64Content() {
-            return base64Content;
-        }
-
-        public void setBase64Content(String base64Content) {
-            this.base64Content = base64Content;
-        }
 
         public LocalDateTime getUploadedAt() {
             return uploadedAt;
