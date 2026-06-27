@@ -126,7 +126,7 @@ const ApplicationStatus = (request_for) => {
               {application.request_id || "--"}
             </div>
             <div className="col-span-3 flex justify-center items-center p-2 text-center">
-              {application.service_name || "--"}
+              {application.service_name || "Certified Copy of Serveyed Khatian"}
             </div>
             <div className="col-span-3 flex justify-center items-center p-2 text-center">
               {formatDate(application.created_at)}
@@ -146,7 +146,7 @@ const ApplicationStatus = (request_for) => {
               </div>
               <div>
                 <span className="font-semibold">Amount: </span> ₹
-                {application.amount || "0"}
+                {application.amount || "30"}
               </div>
             </div>
             <div className="col-span-1 flex justify-center items-center p-2 text-center">

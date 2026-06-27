@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const DownloadCertificate = () => {
   const [applications, setApplications] = useState([]);
@@ -16,7 +17,7 @@ const DownloadCertificate = () => {
           body: JSON.stringify({
             citizen_id: "2823",
             role_id: "6",
-            request_for: "pending",
+            request_for: "list",
           }),
         },
       );
@@ -37,11 +38,12 @@ const DownloadCertificate = () => {
       setLoading(true);
 
       const payload = {
-        service_id: "12",
+        service_id: "10",
         citizen_id: "2823",
         role_id: "6",
         request_id: application.request_id,
       };
+      console.log(payload);
 
       const response = await fetch(
         "http://localhost:8081/jamipariseva/api/download",
@@ -55,11 +57,13 @@ const DownloadCertificate = () => {
       );
 
       const result = await response.json();
+      console.log(result);
 
-      if (result?.data?.download_url) {
-        window.open(result.data.download_url, "_blank");
+      if (result?.data?.pdf_url) {
+        window.open(result.data.pdf_url, "_blank");
+        fetchApplications();
       } else {
-        alert("Download URL not received");
+        toast.error("Download URL not received");
       }
     } catch (error) {
       console.error(error);
@@ -70,45 +74,52 @@ const DownloadCertificate = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto mt-10 bg-white shadow rounded-lg">
-      <div className="bg-steal-blue text-white p-4 text-xl font-bold">
+    <div className="max-w-6xl mx-auto mt-10 bg-white shadow">
+      <div className="bg-steal-blue text-white p-4 text-xl font-bold rounded-t">
         Download Certified Copy
       </div>
-
-      <div className="p-6">
-        {applications.length === 0 ? (
-          <p>No approved applications found.</p>
-        ) : (
-          <table className="w-full border">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2">Request ID</th>
-                <th className="border p-2">Service Name</th>
-                <th className="border p-2">Status</th>
-                <th className="border p-2">Action</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {applications.map((app) => (
-                <tr key={app.request_id}>
-                  <td className="border p-2">{app.request_id}</td>
-                  <td className="border p-2">{app.service_name}</td>
-                  <td className="border p-2">{app.status}</td>
-                  <td className="border p-2">
-                    <button
-                      onClick={() => handleDownload(app)}
-                      disabled={loading}
-                      className="bg-blue-600 text-white px-4 py-2 rounded"
-                    >
-                      Download
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+      <div className="p-2">
+        <div className="border border-richblack-200 divide-y divide-richblack-200">
+          <div className="grid grid-cols-4 divide-x divide-richblack-200">
+            <div className="p-2 flex justify-center items-center font-bold">
+              Request ID
+            </div>
+            <div className="p-2 flex justify-center items-center font-bold">
+              Service Name
+            </div>
+            <div className="p-2 flex justify-center items-center font-bold">
+              Status
+            </div>
+            <div className="p-2 flex justify-center items-center font-bold">
+              Action
+            </div>
+          </div>
+          {applications.map((app) => (
+            <div
+              key={app.request_id}
+              className="grid grid-cols-4 divide-x divide-richblack-200"
+            >
+              <div className="p-2 flex justify-center items-center">
+                {app.request_id}
+              </div>
+              <div className="p-2 flex justify-center items-center">
+                {app.service_name || "Certified Copy of Khatian"}
+              </div>
+              <div className="p-2 flex justify-center items-center">
+                {app.status}
+              </div>
+              <div className="p-2 flex justify-center items-center">
+                <button
+                  onClick={() => handleDownload(app)}
+                  disabled={loading}
+                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

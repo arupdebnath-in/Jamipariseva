@@ -30,11 +30,11 @@ function Sidebar() {
             name: "Online Services",
             path: "/dashboard/services",
         },
-        {
-            id: 2,
-            name: "Payment",
-            path: "/dashboard/payment",
-        },
+        // {
+        //     id: 2,
+        //     name: "Payment",
+        //     path: "/dashboard/payment",
+        // },
         {
             id: 3,
             name: "Application Status",

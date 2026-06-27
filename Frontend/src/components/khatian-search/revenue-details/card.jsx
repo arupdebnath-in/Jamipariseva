@@ -2,40 +2,106 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const RevenueDetails = ({ verifiedKhatianList, setVerifiedKhatianList }) => {
+  // State to store the selected payment option
+  const [paymentMethod, setPaymentMethod] = useState("");
+
   const totalPayableAmount = verifiedKhatianList.reduce((sum, khatian) => {
     return sum + Number(khatian.payableAmount || 0);
   }, 0);
-  const handlePayment = async () => {
-    const paymentData = {
-      Applicationnumber: "APP1234567890",
-      amount: "100.00",
-      paymentMethod: "UPI",
-      paymentDetails: {
-        upiId: "user@bank",
+
+  const addServiceRequest = async () => {
+    const serviceData = {
+      citizen_id: "2823",
+      role_id: "6",
+      service_id: "12",
+      payment_multipy_factor: [
+        {
+          count: 1,
+        },
+      ],
+      rorinfo: [
+        {
+          search_value: "11/1",
+          khatian_no: "11/1",
+          mouja_val: "922855",
+          search_type: "1",
+          is_khatian_required: "1",
+        },
+      ],
+      applicantinfo: {
+        name: "Narendra Chandra Pal",
       },
     };
-    const response = await fetch("http://localhost:8080/paymentgateway/pay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(paymentData),
-    });
-    const data = await response.json();
-    console.log("Payment api response : ");
-    console.log(data);
-    if (data.status === "Success") {
-      toast.success("Payment Successfull");
-    } else {
-      toast.error("Payment failed");
+    // toast.success("New Service added");
+    try {
+      const response = await fetch(
+        "http://localhost:8081/jamipariseva/api/servicerequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(serviceData),
+        },
+      );
+      const data = await response.json();
+      console.log("Service api response : ", data);
+
+      if (data.success === true) {
+        toast.success("Service Added");
+      } else {
+        toast.error("Service not added");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred during service addition.");
     }
   };
+
+  const handlePayment = async () => {
+    if (!paymentMethod) {
+      toast.error("Please select a payment option before proceeding.");
+      return;
+    }
+
+    const paymentData = {
+      Applicationnumber: "APP1234567890",
+      amount: totalPayableAmount.toFixed(2),
+      paymentMethod: paymentMethod,
+      paymentDetails: {
+        upiId: paymentMethod === "UPI" ? "user@bank" : "",
+      },
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/paymentgateway/pay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(paymentData),
+      });
+      const data = await response.json();
+      console.log("Payment api response : ", data);
+
+      if (data.status === "Success") {
+        toast.success("Payment Successful");
+        addServiceRequest();
+      } else {
+        toast.error("Payment failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred during payment processing.");
+    }
+  };
+
   const handleDelete = (id) => {
-    // console.log(id);
     setVerifiedKhatianList((prevList) =>
       prevList.filter((item) => item.id !== id),
     );
   };
+
   return (
     <div className="border border-blue-100 rounded-t">
       <h2 className="text-xl font-bold bg-steal-blue px-5 py-2 text-white">
@@ -63,7 +129,7 @@ const RevenueDetails = ({ verifiedKhatianList, setVerifiedKhatianList }) => {
           {verifiedKhatianList.map((khatian, idx) => {
             return (
               <div
-                key={idx}
+                key={khatian.id || idx}
                 className="grid grid-cols-5 text-sm text-gray-600 bg-munsell"
               >
                 <div className="col-span-1 flex flex-col items-center justify-center border-l border-b border-r border-richblack-200">
@@ -86,7 +152,7 @@ const RevenueDetails = ({ verifiedKhatianList, setVerifiedKhatianList }) => {
                   <h1 className="w-7 h-7 m-2 cursor-pointer active:scale-95">
                     <img
                       src="/delete.png"
-                      alt=""
+                      alt="Delete"
                       onClick={() => {
                         handleDelete(khatian.id);
                       }}
@@ -97,6 +163,7 @@ const RevenueDetails = ({ verifiedKhatianList, setVerifiedKhatianList }) => {
             );
           })}
         </div>
+
         <div className="border border-blue-50 p-5">
           <div>
             <div className="font-bold">
@@ -105,24 +172,26 @@ const RevenueDetails = ({ verifiedKhatianList, setVerifiedKhatianList }) => {
           </div>
           <div className="flex gap-5 h-10 items-center my-10">
             <div className="font-bold">Choose Payment Option:</div>
+            {/* Added value and onChange to bind the dropdown to state */}
             <select
-              name=""
-              id=""
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
               className="border border-blue-50 flex justify-center items-center h-10 px-10 focus:outline-none"
             >
               <option value="">--select--</option>
-              <option value="">Net Banking</option>
-              <option value="">Credit Card</option>
-              <option value="">Debit Card</option>
-              <option value="">UPI</option>
+              <option value="Net Banking">Net Banking</option>
+              <option value="Credit Card">Credit Card</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="UPI">UPI</option>
             </select>
           </div>
         </div>
 
         <div className="flex items-center justify-center m-5">
           <button
-            className="bg-ufo-green text-white px-3 active:scale-95 py-1 rounded"
+            className="bg-ufo-green text-white px-3 active:scale-95 py-1 rounded disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handlePayment}
+            disabled={!paymentMethod}
           >
             Save & Make Payment
           </button>
