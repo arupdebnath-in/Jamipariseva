@@ -9,6 +9,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="esignature" />
         <module name="jamipariseva-api" />
+      </profile>
+      <profile name="Annotation profile for payment-gateway" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
         <module name="payment-gateway" />
       </profile>
     </annotationProcessing>
@@ -17,7 +25,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="esignature" options="-parameters" />
       <module name="jamipariseva-api" options="-parameters" />
-      <module name="payment-gateway" options="-parameters" />
+      <module name="payment-gateway" options="-parameters -Xlint:none --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED" />
     </option>
   </component>
 </project>
