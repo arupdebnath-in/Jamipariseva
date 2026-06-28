@@ -10,6 +10,7 @@ import AvailableServices from './components/services/page'
 import { Toaster } from "react-hot-toast"
 import ApplicationStatus from './components/application-status/page'
 import DownloadCertificate from './components/download/page'
+import APITEST from './components/apiTest/page'
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("activeUserEmail");
@@ -49,6 +50,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path='/apitest' element={<APITEST/>}/>
         </Routes>
       </div>
     </>

@@ -1,0 +1,50 @@
+HELP.md
+
+# --- Build Outputs ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# --- Logs and Runtime Clutter ---
+*.log
+logs/
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# --- Spring Boot Runtime Executables ---
+# (Optional: uncomment below if you don't want to track the heavy executable wrappers)
+# mvnw
+# mvnw.cmd
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+/out/
+
+# --- Eclipse / STS ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# --- VS Code ---
+.vscode/
+
+# --- NetBeans ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# --- OS System Files ---
+Thumbs.db
+.DS_Store
